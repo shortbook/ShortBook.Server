@@ -7,16 +7,25 @@ namespace ShortBook.Server.Domain.User
     {
         private readonly IUserRepository _repository;
 
-        public User(IUserRepository repository)
+        public User()
         {
-            _repository = repository;
+            _repository = RepositoryFactory.Create<IUserRepository>();
         }
-
         public string Name { get; set; }
 
         public string Username { get; set; }
 
         public string Password { get; set; }
+
+        public User Login(string username, string password)
+        {
+            return _repository.Get(username, password);
+        }
+
+        public void Register(User user)
+        {
+            _repository.Add(user);
+        }
 
         public void ChangePassword(string newPassword)
         {
