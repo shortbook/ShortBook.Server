@@ -1,25 +1,50 @@
-﻿using ShortBook.Server.Domain;
+﻿using System.IO;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using ShortBook.Server.Domain;
 
 namespace ShortBook.Server.Repository
 {
-    public abstract class RepositoryBase<T> where T : Entity
+    public abstract class RepositoryBase<T> : DbContext
+        where T : Entity
     {
+        public DbSet<T> Entities { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+
+            IConfiguration config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+            string conn = config.GetConnectionString("DataAccessPostgreSqlProvider");
+            optionsBuilder.UseNpgsql(conn);
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<T>();
+
+            base.OnModelCreating(builder);
+        }
+
         public void Add(T entity)
         {
-            // TODO Entity Framework
-            throw new System.NotImplementedException();
+            Entities.Add(entity);
+            SaveChanges();
         }
 
         public T Get(long id)
         {
-            // TODO Entity Framework
-            throw new System.NotImplementedException();
+            return Entities.FirstOrDefault(e => e.Id == id);
         }
 
         public void Modify(T entity)
         {
-            // TODO Entity Framework
-            throw new System.NotImplementedException();
+            Entities.Update(entity);
+            SaveChanges();
         }
     }
 }

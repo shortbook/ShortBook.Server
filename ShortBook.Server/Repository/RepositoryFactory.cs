@@ -9,7 +9,7 @@ namespace ShortBook.Server.Repository
         public static void Setup(Module module)
         {
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new AutofacModule());
+            builder.RegisterModule(module);
             _container = builder.Build();
         }
 

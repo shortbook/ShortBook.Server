@@ -1,4 +1,5 @@
 ﻿using ShortBook.Server.Domain.User;
+using System.Linq;
 
 namespace ShortBook.Server.Repository
 {
@@ -6,8 +7,9 @@ namespace ShortBook.Server.Repository
     {
         public User Get(string username, string password)
         {
-            // TODO Entity Framework
-            throw new System.NotImplementedException();
+            return Entities.FirstOrDefault(e =>
+                e.Username == username &&
+                e.Password == password);
         }
     }
 }

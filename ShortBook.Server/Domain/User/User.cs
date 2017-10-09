@@ -1,8 +1,11 @@
-﻿using ShortBook.Server.Exception;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using ShortBook.Server.Exception;
 using ShortBook.Server.Repository;
 
 namespace ShortBook.Server.Domain.User
 {
+    [Table("User")]
     public class User : Entity
     {
         private readonly IUserRepository _repository;
@@ -17,6 +20,8 @@ namespace ShortBook.Server.Domain.User
 
         public string Password { get; set; }
 
+        public DateTime LogonDate { get; set; }
+
         public User Login(string username, string password)
         {
             return _repository.Get(username, password);
@@ -24,6 +29,7 @@ namespace ShortBook.Server.Domain.User
 
         public void Register(User user)
         {
+            user.LogonDate = DateTime.Today;
             _repository.Add(user);
         }
 

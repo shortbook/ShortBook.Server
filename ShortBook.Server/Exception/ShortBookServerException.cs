@@ -14,7 +14,8 @@ namespace ShortBook.Server.Exception
         {
         }
 
-        public ShortBookServerException(string message, System.Exception inner) : base(message, inner)
+        public ShortBookServerException(string message, System.Exception inner)
+            : base(message, inner)
         {
         }
 
