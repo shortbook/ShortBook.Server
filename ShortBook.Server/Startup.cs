@@ -1,10 +1,10 @@
 ﻿using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ShortBook.Server.Repository;
+using ShortBook.Server.Service;
 
 namespace ShortBook.Server
 {
@@ -31,7 +31,7 @@ namespace ShortBook.Server
             //
             // You must have the call to AddAutofac in the Program.Main
             // method or this won't be called.
-            builder.RegisterModule(new AutofacModule());
+            builder.RegisterModule(new ServiceModule());
 
             RepositoryFactory.Setup(new RepositoryModule());
         }

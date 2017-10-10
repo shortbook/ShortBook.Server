@@ -14,6 +14,7 @@ namespace ShortBook.Server.Domain.User
         {
             _repository = RepositoryFactory.Create<IUserRepository>();
         }
+
         public string Name { get; set; }
 
         public string Username { get; set; }
@@ -22,15 +23,25 @@ namespace ShortBook.Server.Domain.User
 
         public DateTime LogonDate { get; set; }
 
-        public User Login(string username, string password)
+        public bool Login()
         {
-            return _repository.Get(username, password);
+            var user = _repository.Get(Username, Password);
+            if (user == null)
+            {
+                return false;
+            }
+            Id = user.Id;
+            Name = user.Name;
+            Username = user.Username;
+            Password = user.Password;
+            LogonDate = user.LogonDate;
+            return true;
         }
 
-        public void Register(User user)
+        public void Register()
         {
-            user.LogonDate = DateTime.Today;
-            _repository.Add(user);
+            LogonDate = DateTime.Today;
+            _repository.Add(this);
         }
 
         public void ChangePassword(string newPassword)

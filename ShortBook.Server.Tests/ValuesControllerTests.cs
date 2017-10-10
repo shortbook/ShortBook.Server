@@ -9,7 +9,7 @@ namespace ShortBook.Server.Tests
         [Test]
         public void GetTest()
         {
-            ValuesController vc = new ValuesController();
+            UserController vc = new UserController();
             Assert.AreEqual("value", vc.Get(1));
         }
     }
