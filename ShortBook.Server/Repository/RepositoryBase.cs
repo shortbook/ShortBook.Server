@@ -46,5 +46,11 @@ namespace ShortBook.Server.Repository
             Entities.Update(entity);
             SaveChanges();
         }
+
+        public void Remove(T entity)
+        {
+            Entities.Remove(entity);
+            SaveChanges();
+        }
     }
 }

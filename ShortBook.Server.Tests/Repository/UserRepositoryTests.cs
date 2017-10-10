@@ -15,7 +15,7 @@ namespace ShortBook.Server.Tests.Repository
         }
 
         [Test]
-        public void GetTest()
+        public void Test()
         {
             UserRepository vc = new UserRepository();
             User user = new User()
@@ -26,6 +26,22 @@ namespace ShortBook.Server.Tests.Repository
                 LogonDate = DateTime.Today
             };
             vc.Add(user);
+
+            var getuser = vc.Get("username", "password");
+            Assert.IsNotNull(getuser);
+            Assert.AreEqual(user.Id, getuser.Id);
+
+            user.Password = "password2";
+            vc.Modify(user);
+
+            getuser = vc.Get("username", "password2");
+            Assert.IsNotNull(getuser);
+            Assert.AreEqual(user.Password, "password2");
+
+            vc.Remove(user);
+
+            getuser = vc.Get(user.Id);
+            Assert.IsNull(getuser);
         }
     }
 }
