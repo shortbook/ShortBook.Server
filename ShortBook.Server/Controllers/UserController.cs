@@ -22,12 +22,12 @@ namespace ShortBook.Server.Controllers
             return new JsonResult(_service.Register(user));
         }
 
-        // POST api/login
-        [HttpPost(Name = "login")]
-        public JsonResult Login([FromBody]UserLoginModel user)
-        {
-            return new JsonResult(_service.Login(user));
-        }
+        //// POST api/login
+        //[HttpPost(Name = "login")]
+        //public JsonResult Login([FromBody]UserLoginModel user)
+        //{
+        //    return new JsonResult(_service.Login(user));
+        //}
 
         // PUT api/user/5
         [HttpPut("{id}")]
