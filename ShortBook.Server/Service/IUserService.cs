@@ -3,7 +3,7 @@ using ShortBook.Server.ViewModel;
 
 namespace ShortBook.Server.Service
 {
-    public interface IUserService
+    public interface IUserService : IShortBookService
     {
         ServiceResult Register(UserRegisterModel user);
 

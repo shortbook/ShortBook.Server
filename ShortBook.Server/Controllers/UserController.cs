@@ -1,18 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ShortBook.Server.Domain.User;
 using ShortBook.Server.Service;
 using ShortBook.Server.ViewModel;
 
 namespace ShortBook.Server.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Route("api/[controller]")]
     public class UserController : Controller
     {
         private readonly IUserService _service;
 
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="service"></param>
         public UserController(IUserService service)
         {
             _service = service;
+            _service.Context = HttpContext;
         }
 
         // POST api/user

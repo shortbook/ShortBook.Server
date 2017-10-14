@@ -5,7 +5,7 @@ using ShortBook.Server.ViewModel;
 
 namespace ShortBook.Server.Service
 {
-    public class UserService : IUserService
+    public class UserService : ShortBookServiceBase
     {
         public ServiceResult Login(UserLoginModel user)
         {
