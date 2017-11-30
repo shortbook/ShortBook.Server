@@ -1,56 +1,37 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using ShortBook.Server.Exception;
-using ShortBook.Server.Repository;
 
 namespace ShortBook.Server.Domain.User
 {
+    /// <summary>
+    /// 用户
+    /// </summary>
     [Table("User")]
     public class User : Entity
     {
-        private readonly IUserRepository _repository;
+        /// <summary>
+        /// 名
+        /// </summary>
+        public string FirstName { get; set; }
 
-        public User()
-        {
-            _repository = RepositoryFactory.Create<IUserRepository>();
-        }
+        /// <summary>
+        /// 姓
+        /// </summary>
+        public string LastName { get; set; }
 
-        public string Name { get; set; }
+        /// <summary>
+        /// 电子邮件
+        /// </summary>
+        public string Email { get; set; }
 
-        public string Username { get; set; }
-
+        /// <summary>
+        /// 登录口令
+        /// </summary>
         public string Password { get; set; }
 
+        /// <summary>
+        /// 注册时间
+        /// </summary>
         public DateTime LogonDate { get; set; }
-
-        public bool Login()
-        {
-            var user = _repository.Get(Username, Password);
-            if (user == null)
-            {
-                return false;
-            }
-            Id = user.Id;
-            Name = user.Name;
-            Username = user.Username;
-            Password = user.Password;
-            LogonDate = user.LogonDate;
-            return true;
-        }
-
-        public void Register()
-        {
-            LogonDate = DateTime.Today;
-            _repository.Add(this);
-        }
-
-        public void ChangePassword(string newPassword)
-        {
-            if (string.CompareOrdinal(Password, newPassword) == 0)
-            {
-                throw new ShortBookServerException("新密码不能与旧密码相同。");
-            }
-            _repository.Modify(this);
-        }
     }
 }
