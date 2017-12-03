@@ -17,31 +17,29 @@ namespace ShortBook.Server.Tests.Repository
         [Test]
         public void Test()
         {
-            UserRepository vc = new UserRepository();
+            IUserRepository repo = new UserRepository();
             User user = new User()
             {
-                Name = "name",
-                Username = "username",
+                FirstName = "yunpeng",
+                LastName = "gao",
+                Email = "gaoyunpeng1982@gmail.com",
                 Password = "password",
                 LogonDate = DateTime.Today
             };
-            vc.Add(user);
+            repo.AddUser(user);
 
-            var getuser = vc.Get("username", "password");
+            Assert.IsTrue(repo.Validate(user));
+
+            var getuser = repo.GetUser(user.Email, user.Password);
             Assert.IsNotNull(getuser);
             Assert.AreEqual(user.Id, getuser.Id);
 
             user.Password = "password2";
-            vc.Modify(user);
+            repo.SetPassword(user);
 
-            getuser = vc.Get("username", "password2");
+            getuser = repo.GetUser(user.Id);
             Assert.IsNotNull(getuser);
-            Assert.AreEqual(user.Password, "password2");
-
-            vc.Remove(user);
-
-            getuser = vc.Get(user.Id);
-            Assert.IsNull(getuser);
+            Assert.AreEqual(getuser.Password, "password2");
         }
     }
 }

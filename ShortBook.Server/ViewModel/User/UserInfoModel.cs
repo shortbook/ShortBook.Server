@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ShortBook.Server.ViewModel
+namespace ShortBook.Server.ViewModel.User
 {
     public class UserInfoModel
     {

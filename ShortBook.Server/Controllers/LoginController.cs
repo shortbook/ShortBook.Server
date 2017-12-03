@@ -1,23 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShortBook.Server.Exception;
 using ShortBook.Server.Service;
-using ShortBook.Server.ViewModel;
+using ShortBook.Server.ViewModel.User;
 
 namespace ShortBook.Server.Controllers
 {
     /// <summary>
-    /// Login
+    /// 登录操作
     /// </summary>
-    [Route("Login")]
+    [Route("api/login")]
     public class LoginController : Controller
     {
-        private readonly ILoginService _service;
+        private readonly IUserService _service;
 
         /// <summary>
         /// constructor
         /// </summary>
         /// <param name="service"></param>
-        public LoginController(ILoginService service)
+        public LoginController(IUserService service)
         {
             _service = service;
             _service.Context = HttpContext;
@@ -27,12 +27,14 @@ namespace ShortBook.Server.Controllers
         /// Login by username and password.
         /// </summary>
         /// <param name="model"></param>
+        /// <example>POST /api/login</example>
         [HttpPost]
-        public ActionResult Post([FromBody]UserLoginModel model)
+        public ActionResult Post([FromBody]LoginModel model)
         {
             try
             {
-                return Ok(_service.Login(model));
+                _service.Login(model);
+                return Ok();
             }
             catch (ShortBookServerException e)
             {
@@ -44,11 +46,39 @@ namespace ShortBook.Server.Controllers
         /// Change login password.
         /// </summary>
         /// <param name="model"></param>
+        /// <example>PUT /api/login</example>
         [HttpPut]
         public ActionResult Put([FromBody]ChangePasswordModel model)
         {
-            _service.ChangePassword(model);
-            return Ok();
+            try
+            {
+                _service.ChangePassword(model);
+                return Ok();
+            }
+            catch (ShortBookServerException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// 用户登出
+        /// </summary>
+        /// <param name="id">用户Id</param>
+        /// <example>DELETE /api/login/1</example>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public ActionResult Delete(long id)
+        {
+            try
+            {
+                _service.Logout(id);
+                return Ok();
+            }
+            catch (ShortBookServerException e)
+            {
+                return NotFound(e.Message);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ShortBook.Server.ViewModel;
+using ShortBook.Server.ViewModel.User;
 
 namespace ShortBook.Server.Service
 {
@@ -21,7 +22,7 @@ namespace ShortBook.Server.Service
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public UserInfoModel Login(UserLoginModel model)
+        public UserInfoModel Login(LoginModel model)
         {
             throw new System.NotImplementedException();
         }

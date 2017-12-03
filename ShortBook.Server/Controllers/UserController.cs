@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ShortBook.Server.Exception;
 using ShortBook.Server.Service;
-using ShortBook.Server.ViewModel;
+using ShortBook.Server.ViewModel.User;
 
 namespace ShortBook.Server.Controllers
 {
     /// <summary>
-    /// 
+    /// 用户操作
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/user")]
     public class UserController : Controller
     {
         private readonly IUserService _service;
@@ -22,26 +23,23 @@ namespace ShortBook.Server.Controllers
             _service.Context = HttpContext;
         }
 
-        // POST api/user
-        [HttpPost(Name = "user")]
-        public JsonResult Register([FromBody]UserRegisterModel user)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <example>POST api/user</example>
+        [HttpPost]
+        public ActionResult Post([FromBody]RegisterModel model)
         {
-            return new JsonResult(_service.Register(user));
-        }
-
-        //// POST api/login
-        //[HttpPost(Name = "login")]
-        //public JsonResult Login([FromBody]UserLoginModel user)
-        //{
-        //    return new JsonResult(_service.Login(user));
-        //}
-
-        // PUT api/user/5
-        [HttpPut("{id}")]
-        public JsonResult Put(int id, [FromBody]UserModifyModel user)
-        {
-            user.Id = id;
-            return new JsonResult(_service.Modify(user));
+            try
+            {
+                _service.Register(model);
+                return Ok();
+            }
+            catch (ShortBookServerException e)
+            {
+                return NotFound(e.Message);
+            }
         }
     }
 }
