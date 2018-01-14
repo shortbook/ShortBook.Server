@@ -5,7 +5,7 @@ namespace ShortBook.Server.Repository
     /// <summary>
     /// 用户存储接口
     /// </summary>
-    public interface IUserRepository
+    public interface IUserRepository : IRepository
     {
         /// <summary>
         /// 添加一个用户
@@ -14,11 +14,11 @@ namespace ShortBook.Server.Repository
         void AddUser(User user);
 
         /// <summary>
-        /// 校验用户
+        /// 判断电子邮件地址是否已经被注册
         /// </summary>
-        /// <param name="user">待校验用户</param>
-        /// <returns>如果校验成功，则返回true；如果校验失败，则返回false。</returns>
-        bool Validate(User user);
+        /// <param name="email">电子邮件地址</param>
+        /// <returns>如果已经被注册，则返回true；否则返回false。</returns>
+        bool EmailRegistered(string email);
 
         /// <summary>
         /// 获取指定Id的用户

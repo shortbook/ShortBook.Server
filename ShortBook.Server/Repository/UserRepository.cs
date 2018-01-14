@@ -18,14 +18,13 @@ namespace ShortBook.Server.Repository
         }
 
         /// <summary>
-        /// 校验用户
+        /// 判断电子邮件地址是否已经被注册
         /// </summary>
-        /// <param name="user">待校验用户</param>
-        /// <returns>如果校验成功，则返回true；如果校验失败，则返回false。</returns>
-        public bool Validate(User user)
+        /// <param name="email">电子邮件地址</param>
+        /// <returns>如果已经被注册，则返回true；否则返回false。</returns>
+        public bool EmailRegistered(string email)
         {
-            return Entities
-                .Any(e => e.Email == user.Email && e.Password == user.Password);
+            return Entities.Any(e => e.Email == email);
         }
 
         /// <summary>

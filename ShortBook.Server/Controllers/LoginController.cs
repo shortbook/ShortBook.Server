@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ShortBook.Server.Exception;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
+using ShortBook.Server.Exceptions;
 using ShortBook.Server.Service;
 using ShortBook.Server.ViewModel.User;
 
@@ -55,9 +56,9 @@ namespace ShortBook.Server.Controllers
                 _service.ChangePassword(model);
                 return Ok();
             }
-            catch (ShortBookServerException e)
+            catch (Exception e)
             {
-                return NotFound(e.Message);
+                return e.Catch();
             }
         }
 

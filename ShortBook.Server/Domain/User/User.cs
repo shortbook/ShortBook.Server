@@ -33,5 +33,14 @@ namespace ShortBook.Server.Domain.User
         /// 注册时间
         /// </summary>
         public DateTime LogonDate { get; set; }
+
+        /// <summary>
+        /// 验证用户信息
+        /// </summary>
+        public void Validate()
+        {
+            // TODO 验证用户信息
+            
+        }
     }
 }

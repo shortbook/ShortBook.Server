@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ShortBook.Server.Exception;
+using ShortBook.Server.Exceptions;
 using ShortBook.Server.Service;
 using ShortBook.Server.ViewModel.User;
 
