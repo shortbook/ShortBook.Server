@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using ShortBook.Server.Exceptions;
 using ShortBook.Server.Service;
 using ShortBook.Server.ViewModel.User;
@@ -18,10 +19,13 @@ namespace ShortBook.Server.Controllers
         /// constructor
         /// </summary>
         /// <param name="service"></param>
-        public LoginController(IUserService service)
+        /// <param name="logger"></param>
+        public LoginController(IUserService service, ILogger<LoginController> logger)
         {
             _service = service;
             _service.Context = HttpContext;
+
+            _service.Logger = logger;
         }
 
         /// <summary>
@@ -39,7 +43,7 @@ namespace ShortBook.Server.Controllers
             }
             catch (ShortBookServerException e)
             {
-                return NotFound(e.Message);
+                return e.Catch();
             }
         }
 

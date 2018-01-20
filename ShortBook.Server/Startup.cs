@@ -1,8 +1,10 @@
-﻿using Autofac;
+﻿using System.Text;
+using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NLog.Web;
 using ShortBook.Server.Repository;
 using ShortBook.Server.Service;
 using Swashbuckle.AspNetCore.Swagger;
@@ -73,6 +75,11 @@ namespace ShortBook.Server
                 app.UseDeveloperExceptionPage();
             }
 
+            env.ConfigureNLog("nlog.config");
+
+            // 防止输出中文日志时乱码
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance); 
+            app.AddNLogWeb();
             app.UseSession();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.

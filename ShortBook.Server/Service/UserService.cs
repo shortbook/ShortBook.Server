@@ -46,7 +46,6 @@ namespace ShortBook.Server.Service
             }
             catch (Exception ex)
             {
-                // TODO NLog
                 throw new ShortBookServerException("用户注册过程中发生意外错误。", ex);
             }
         }
@@ -75,7 +74,6 @@ namespace ShortBook.Server.Service
             }
             catch (Exception ex)
             {
-                // TODO NLog
                 throw new ShortBookServerException("用户登录名或登录口令错误，请确认。", ex);
             }   
         }

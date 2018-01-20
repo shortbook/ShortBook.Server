@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace ShortBook.Server.Service
 {
@@ -11,5 +12,10 @@ namespace ShortBook.Server.Service
         /// Get or set http context.
         /// </summary>
         HttpContext Context { get; set; }
+
+        /// <summary>
+        /// Get or set logger.
+        /// </summary>
+        ILogger Logger { get; set; }
     }
 }

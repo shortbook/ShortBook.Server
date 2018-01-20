@@ -1,5 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using NLog;
+using ILogger = NLog.ILogger;
 
 namespace ShortBook.Server.Exceptions
 {
@@ -8,6 +10,13 @@ namespace ShortBook.Server.Exceptions
     /// </summary>
     public static class ExceptionExtensions
     {
+        private static readonly ILogger logger;
+
+        static ExceptionExtensions()
+        {
+            logger = new LogFactory().GetLogger("ShortBook.Server.Error");
+        }
+
         /// <summary>
         /// 异常处理
         /// </summary>
@@ -15,6 +24,7 @@ namespace ShortBook.Server.Exceptions
         /// <returns></returns>
         public static ActionResult Catch(this Exception ex)
         {
+            logger.Error(ex);
             if (ex is ShortBookServerException)
             {
                 if (ex is ShortBookServerUnauthorizedException)
