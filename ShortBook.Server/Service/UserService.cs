@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using ShortBook.Server.Domain.User;
 using ShortBook.Server.Exceptions;
 using ShortBook.Server.Repository;
@@ -14,96 +11,45 @@ namespace ShortBook.Server.Service
     /// </summary>
     public class UserService : ShortBookServiceBase, IUserService
     {
-        private const string LOGIN_INFO = "user";
-
         /// <summary>
         /// 注册
         /// </summary>
         /// <param name="model">用户注册模型</param>
         public void Register(RegisterModel model)
         {
-            try
+            IUserRepository repo = RepositoryFactory.Create<IUserRepository>();
+            if (repo.EmailRegistered(model.Email))
             {
-                IUserRepository repo = RepositoryFactory.Create<IUserRepository>();
-                if (repo.EmailRegistered(model.Email))
-                {
-                    throw new ShortBookServerException("");
-                }
-                User user = new User
-                {
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    Email = model.Email,
-                    Password = GetMd5(model.Password),
-                    LogonDate = DateTime.Now
-                };
-                user.Validate();
-                repo.AddUser(user);
+                throw new ShortBookServerException("该邮箱已经注册，请登录。");
             }
-            catch (ShortBookServerException)
+
+            User user = new User
             {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw new ShortBookServerException("用户注册过程中发生意外错误。", ex);
-            }
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                Password = model.Password,
+                LogonDate = DateTime.Now
+            };
+            user.Validate();
+            repo.AddUser(user);
         }
 
         /// <summary>
-        /// 登录
+        /// 查询用户信息
         /// </summary>
-        /// <param name="model">用户登录模型</param>
-        public void Login(LoginModel model)
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public UserInfoModel GetUserInfo(long id)
         {
-            try
+            IUserRepository repo = RepositoryFactory.Create<IUserRepository>();
+            var user = repo.GetUser(id);
+            return new UserInfoModel
             {
-                if (Context.Session.Keys.Contains(LOGIN_INFO))
-                {
-                    // TODO 单点登录验证
-                    throw new ShortBookServerUnauthorizedException("用户已经登录，不允许重复登录。");
-                }
-
-                IUserRepository repo = RepositoryFactory.Create<IUserRepository>();
-                User user = repo.GetUser(model.Email, GetMd5(model.Password));
-                Context.Session.SetObject(LOGIN_INFO, user);
-            }
-            catch (ShortBookServerException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                throw new ShortBookServerException("用户登录名或登录口令错误，请确认。", ex);
-            }   
-        }
-
-        /// <summary>
-        /// 登出
-        /// </summary>
-        /// <param name="id">用户Id</param>
-        public void Logout(long id)
-        {
-            Context.Session.Remove(LOGIN_INFO);
-        }
-
-        /// <summary>
-        /// 修改登录口令
-        /// </summary>
-        /// <param name="model">修改登录口令模型</param>
-        public void ChangePassword(ChangePasswordModel model)
-        {
-            throw new NotImplementedException();
-        }
-
-        private string GetMd5(string input)
-        {
-            using (var md5 = MD5.Create())
-            {
-                var result = md5.ComputeHash(Encoding.ASCII.GetBytes(input));
-                var strResult = BitConverter.ToString(result);
-                return strResult.Replace("-", "");
-            }
+                Id = user.Id,
+                Name = string.Format("{0} {1}", user.LastName, user.FirstName),
+                LogonDate = user.LogonDate.Date
+            };
         }
     }
 }

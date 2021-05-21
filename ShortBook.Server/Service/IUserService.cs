@@ -14,21 +14,10 @@ namespace ShortBook.Server.Service
         void Register(RegisterModel model);
 
         /// <summary>
-        /// 登录
+        /// 查询用户信息
         /// </summary>
-        /// <param name="model">用户登录模型</param>
-        void Login(LoginModel model);
-
-        /// <summary>
-        /// 登出
-        /// </summary>
-        /// <param name="id">用户Id</param>
-        void Logout(long id);
-
-        /// <summary>
-        /// 修改登录口令
-        /// </summary>
-        /// <param name="model">修改登录口令模型</param>
-        void ChangePassword(ChangePasswordModel model);
+        /// <param name="id"></param>
+        /// <returns></returns>
+        UserInfoModel GetUserInfo(long id);
     }
 }

@@ -1,9 +1,10 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ShortBook.Server.Exceptions;
 using ShortBook.Server.Service;
-using ShortBook.Server.ViewModel.User;
+using ShortBook.Server.ViewModel.Login;
 
 namespace ShortBook.Server.Controllers
 {
@@ -11,20 +12,20 @@ namespace ShortBook.Server.Controllers
     /// 登录操作
     /// </summary>
     [Route("api/login")]
+    [Authorize]
+    [ApiController]
     public class LoginController : Controller
     {
-        private readonly IUserService _service;
+        private readonly ILoginService _service;
 
         /// <summary>
         /// constructor
         /// </summary>
         /// <param name="service"></param>
         /// <param name="logger"></param>
-        public LoginController(IUserService service, ILogger<LoginController> logger)
+        public LoginController(ILoginService service, ILogger<LoginController> logger)
         {
             _service = service;
-            _service.Context = HttpContext;
-
             _service.Logger = logger;
         }
 
@@ -34,10 +35,12 @@ namespace ShortBook.Server.Controllers
         /// <param name="model"></param>
         /// <example>POST /api/login</example>
         [HttpPost]
-        public ActionResult Post([FromBody]LoginModel model)
+        [AllowAnonymous]
+        public ActionResult Post(LoginModel model)
         {
             try
             {
+                _service.Context = HttpContext;
                 _service.Login(model);
                 return Ok();
             }
@@ -57,6 +60,7 @@ namespace ShortBook.Server.Controllers
         {
             try
             {
+                _service.Context = HttpContext;
                 _service.ChangePassword(model);
                 return Ok();
             }
@@ -77,6 +81,7 @@ namespace ShortBook.Server.Controllers
         {
             try
             {
+                _service.Context = HttpContext;
                 _service.Logout(id);
                 return Ok();
             }

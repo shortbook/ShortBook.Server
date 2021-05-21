@@ -1,4 +1,4 @@
-﻿namespace ShortBook.Server.ViewModel.User
+﻿namespace ShortBook.Server.ViewModel.Login
 {
     /// <summary>
     /// 修改登录口令模型

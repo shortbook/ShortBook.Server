@@ -1,13 +1,14 @@
 ﻿using System.Text;
 using Autofac;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using NLog.Web;
 using ShortBook.Server.Repository;
 using ShortBook.Server.Service;
-using Swashbuckle.AspNetCore.Swagger;
 
 namespace ShortBook.Server
 {
@@ -26,7 +27,7 @@ namespace ShortBook.Server
         }
 
         /// <summary>
-        /// 配置对象
+        /// 
         /// </summary>
         public IConfiguration Configuration { get; }
 
@@ -39,11 +40,15 @@ namespace ShortBook.Server
             services.AddMvc();
             services.AddSession();
 
-            // Register the Swagger generator, defining one or more Swagger documents
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "ShortBook API", Version = "v1" });
-            });
+            services.AddScoped<ILoginService, LoginService>();
+            // If you don't want the cookie to be automatically authenticated and assigned to HttpContext.User, 
+            // remove the CookieAuthenticationDefaults.AuthenticationScheme parameter passed to AddAuthentication.
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options => 
+                {
+                    options.LoginPath = "/Account/LogIn";
+                    options.LogoutPath = "/Account/LogOff";
+                });
         }
         
         /// <summary>
@@ -68,30 +73,27 @@ namespace ShortBook.Server
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            env.ConfigureNLog("nlog.config");
+            NLogBuilder.ConfigureNLog("nlog.config");
 
             // 防止输出中文日志时乱码
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance); 
-            app.AddNLogWeb();
             app.UseSession();
 
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+            app.UseAuthentication();
+            app.UseRouting();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShortBook API V1");
+                endpoints.MapDefaultControllerRoute();
             });
-
-            app.UseMvc();
         }
     }
 }

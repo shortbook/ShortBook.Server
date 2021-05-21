@@ -31,9 +31,8 @@ namespace ShortBook.Server.Repository
         /// 获取用户
         /// </summary>
         /// <param name="email">电子邮件地址</param>
-        /// <param name="password">登录口令</param>
         /// <returns>如果存在符合指定电子邮件和登录口令的用户，则返回该用户对象；否则返回null。</returns>
-        User GetUser(string email, string password);
+        User GetUser(string email);
 
         /// <summary>
         /// 更新用户的登录口令

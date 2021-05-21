@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ShortBook.Server.Exceptions;
 using ShortBook.Server.Service;
 using ShortBook.Server.ViewModel.User;
@@ -9,6 +11,7 @@ namespace ShortBook.Server.Controllers
     /// 用户操作
     /// </summary>
     [Route("api/user")]
+    [Authorize]
     public class UserController : Controller
     {
         private readonly IUserService _service;
@@ -35,6 +38,25 @@ namespace ShortBook.Server.Controllers
             {
                 _service.Register(model);
                 return Ok();
+            }
+            catch (ShortBookServerException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <example>POST api/user/1</example>
+        [HttpGet("{id}")]
+        public ActionResult Get(long id)
+        {
+            try
+            {
+                var userInfo = _service.GetUserInfo(id);
+                return Ok(JsonConvert.ToString(userInfo));
             }
             catch (ShortBookServerException e)
             {
