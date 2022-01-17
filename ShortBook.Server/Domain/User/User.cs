@@ -53,20 +53,18 @@ namespace ShortBook.Server.Domain.User
         public void Login(string password)
         {
             var saltPassword = (password + Resources.Salt).Substring(0, 64);
-            using (SHA512 shaM = new SHA512Managed())
+            using SHA512 shaM = SHA512.Create();
+            var hash = shaM.ComputeHash(Encoding.Unicode.GetBytes(saltPassword));
+            var hashedInputStringBuilder = new StringBuilder(128);
+            foreach (var b in hash)
             {
-                var hash = shaM.ComputeHash(Encoding.Unicode.GetBytes(saltPassword));
-                var hashedInputStringBuilder = new StringBuilder(128);
-                foreach (var b in hash)
-                {
-                    hashedInputStringBuilder.Append(b.ToString("X2"));
-                }
+                hashedInputStringBuilder.Append(b.ToString("X2"));
+            }
 
-                var sha512Password = hashedInputStringBuilder.ToString();
-                if (sha512Password != Password)
-                {
-                    throw new ShortBookServerUnauthorizedException("用户登录名或登录口令错误，请确认。");
-                }
+            var sha512Password = hashedInputStringBuilder.ToString();
+            if (sha512Password != Password)
+            {
+                throw new ShortBookServerUnauthorizedException("用户登录名或登录口令错误，请确认。");
             }
         }
     }
