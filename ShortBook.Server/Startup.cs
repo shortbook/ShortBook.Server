@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NLog;
 using NLog.Web;
 using ShortBook.Server.Repository;
 using ShortBook.Server.Service;
@@ -80,7 +81,7 @@ namespace ShortBook.Server
                 app.UseDeveloperExceptionPage();
             }
 
-            NLogBuilder.ConfigureNLog("nlog.config");
+            LogManager.Setup().LoadConfigurationFromAppSettings("nlog.config");
 
             // 防止输出中文日志时乱码
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance); 
